@@ -1,5 +1,8 @@
 # learn-english-using-pdf-books
 
+@TECHNOLOGIES
++ take a look on pdf.js (very interesting)
+
 @TODO
 + write a library for pdf file processing
 + every word in the pdf is a single entity (with different level of learning)
