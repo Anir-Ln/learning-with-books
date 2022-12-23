@@ -12,4 +12,6 @@
 + can check any word as known (select level of knowledge of that word)
 + can toggle a button to see all the already seen words (in different color) or see everything as it is
 
-
+@BrainStorming
++ render the pdf book using pdf.js
++ hightligh words in the front end
