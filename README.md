@@ -1,7 +1,9 @@
 # learn-english-using-pdf-books
 
-@TECHNOLOGIES
+@LIBRARIES
 + take a look on pdf.js (very interesting)
++ react-pdf-highlighter is the best option till now: https://github.com/agentcooper/react-pdf-highlighter
++ react-pdf-viewer is also interesting: https://react-pdf-viewer.dev/plugins/highlight/
 
 @TODO
 + write a library for pdf file processing
@@ -15,3 +17,4 @@
 @BrainStorming
 + render the pdf book using pdf.js
 + hightligh words in the front end
+
