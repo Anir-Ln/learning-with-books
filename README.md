@@ -78,6 +78,7 @@ interface Props {
 </div>
 ```
 The function responsible for triggering highlights is HighlightTransform which passed as a prop to the PdfHighlighter component:
+this function returns a Popup component, which wraps the <Highlight>, and also pops up the comment when the mouse is over.
 ```tsx
 // in our case we're only intersted in <Highlight ...> Component
 <PdfHighlighter
