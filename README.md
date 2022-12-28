@@ -62,4 +62,4 @@ return (
 );
 ```
 
-[](public/overview.png)
+[](./public/overview.png)
