@@ -1,4 +1,4 @@
-This folder demonstrates how to use [React PDF viewer](https://react-pdf-viewer.dev) with [Create React App](https://github.com/facebook/create-react-app).
+In this code I am testing the react-pdf-highlighter library.
 
 ## Install
 
@@ -29,11 +29,23 @@ Visit http://localhost:3000 to see it in action.
 ``` javascript
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import { searchPlugin } from '@react-pdf-viewer/search';
 
+import '@react-pdf-viewer/search/lib/styles/index.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+const data = ['should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes']
+
+// defining renderHighlights
+
 const defaultLayoutPluginInstance = defaultLayoutPlugin();
+const searchPluginInstance = searchPlugin({
+        keyword: [
+            ...data.map(text => new RegExp(text)) 
+        ],
+        renderHighlights,
+})
 
 return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.js">
@@ -42,6 +54,7 @@ return (
                 fileUrl={`${process.env.PUBLIC_URL}/pdf-open-parameters.pdf`}
                 plugins={[
                     defaultLayoutPluginInstance,
+                    searchPluginInstance,
                 ]}
             />
         </div>
