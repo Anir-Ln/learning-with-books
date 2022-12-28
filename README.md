@@ -6,6 +6,7 @@
 + react-pdf-viewer is also interesting: https://react-pdf-viewer.dev/plugins/highlight/
 + react-pdf has a textRenderer attribute to Page Component (can use it for highlighting): https://github.com/wojtekmaj/react-pdf/wiki/Recipes#highlight-text-on-the-page
 + use some package like MuPDF (fiz) to convert a pdf page into html, render it. and then using Vanilla Js to highlight...
++ another ideas is to first use a good pdf viewer, then use document.find() function to highlight the wanted phrases. To add a new highlight get the selected text; this can be the best in terms of perfectly highlighting, the problem might be how to show the definition of the word, how to click it? https://stackoverflow.com/a/11790513/15145757
 
 @TODO
 + write a library for pdf file processing
@@ -21,10 +22,9 @@
 + highlight words in the front end
 
 
-<details>
-	<summary>
 ## Analizing react-pdf-highlighter:
-	</summary>
+<details>
+	<summary>see</summary>
 
 looks like the most important part is:
 ```tsx
