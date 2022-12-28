@@ -21,7 +21,11 @@
 + highlight words in the front end
 
 
+<details>
+	<summary>
 ## Analizing react-pdf-highlighter:
+	</summary>
+
 looks like the most important part is:
 ```tsx
 <PdfLoader url={url}>
@@ -120,3 +124,6 @@ this function returns a Popup component, which wraps the <Highlight>, and also p
 	//...
 />
 ```
+</details>
+
+
