@@ -38,7 +38,7 @@ const App = () => {
                                 position={Position.BottomCenter}
                                 target={(toggle, _) => (
                                     <Tooltip
-                                        content={() => 'Click to see more information'}
+                                        content={() => `phrase: ${area.keywordStr.trim()}`}
                                         offset={{ top: 8 + (area.height * area.pageHeight) / 100, left: 0 }}
                                         position={Position.BottomCenter}
                                         target={
@@ -50,7 +50,7 @@ const App = () => {
                                                     position: 'absolute',
                                                     top: 0,
                                                     height: '105%',
-                                                    width: '110%',
+                                                    width: '100%',
                                                     backgroundColor: color(area.keywordStr.trim()),
                                                     cursor: 'pointer',
                                                 }}
@@ -70,7 +70,7 @@ const App = () => {
 
 
     
-    const data = ['should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
+    const data = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
     const searchPluginInstance = searchPlugin({
         keyword: [
             ...data.map(text => new RegExp(text)) 
