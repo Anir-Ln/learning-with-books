@@ -23,7 +23,8 @@ $ npm run start
 Visit http://localhost:3000 to see it in action.
 
 ## Todo
-[-] add possibility of selecting text, then store it as new phrase with it's description
+- [x] highlighting by phrase.
+- [ ] add possibility of selecting text, then store it as new phrase with it's description
 
 
 ## Spotlights
