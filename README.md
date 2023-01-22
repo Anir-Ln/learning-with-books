@@ -24,7 +24,7 @@ Visit http://localhost:3000 to see it in action.
 
 ## Todo
 - [x] highlighting by phrase.
-- [ ] add possibility of selecting text, then store it as new phrase with it's description
+- [x] add possibility of selecting text, then store it as new phrase with it's description
 
 
 ## Spotlights

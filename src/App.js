@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Viewer, Worker, Popover, Position, Tooltip} from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { searchPlugin } from '@react-pdf-viewer/search';
@@ -15,16 +15,20 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 const App = () => {
     const [phrase, setPhrase] = useState('')
     const [context, setContext] = useState('')
+    const [data, setData] = useState(['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement'])
+
 
     const onSelectionChange = (selection) => {
         setContext(selection.anchorNode.data)
         setPhrase(selection.toString())
-        console.log(selection);
+        // console.log(selection);
     }
 
     const onSavePhrase = (phrase, context, meaning) => {
         console.log("here: " + phrase);
         setData([...data, phrase])
+        // setData([])
+        console.log(data);
     }
 
     const renderHighlights = React.useCallback(
@@ -33,7 +37,10 @@ const App = () => {
             const color = (text) => {
                 return colors[text.length%3]
             }
-
+            // renderProps.highlightAreas.forEach((area, index) => {
+            //     console.log(area.keywordStr.trim()); 
+            // });
+            // console.log(renderProps.highlightAreas.length);
             return (
                 <>
                     {renderProps.highlightAreas.map((area, index) => (
@@ -84,12 +91,11 @@ const App = () => {
         }, []
     );
 
-
     
-    const [data, setData] = useState(['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement'])
+    
     const searchPluginInstance = searchPlugin({
         keyword: [
-            ...data.map(text => new RegExp(text)) 
+            ...data.map(text => new RegExp(text))
         ],
         renderHighlights,
         // onHighlightKeyword: (props) => {
@@ -98,8 +104,15 @@ const App = () => {
         // },
     });
 
+
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+
+    const [viewerKey, setViewerKey] = useState(0)
+
+    useEffect(() => {
+        setViewerKey(viewerKey + 1)
+    }, [data])
 
     const styles = {
         splitScreen: {
@@ -119,20 +132,21 @@ const App = () => {
         <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js">
             <div style={styles.splitScreen}>
                 <div style={styles.topPane}>
-                <div
-                    style={{
-                        height: '100vh',
-                        // width: '900px',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                    }}
-                >
-                    <Viewer
-                        fileUrl={`${process.env.PUBLIC_URL}/pdf-open-parameters.pdf`}
-                        plugins={[defaultLayoutPluginInstance, searchPluginInstance]}
-                    />
-                    <SelectionHandler phrase={phrase} onSelectionChange={onSelectionChange}/>
-                </div>
+                    <div
+                        style={{
+                            height: '100vh',
+                            // width: '900px',
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                        }}
+                    >
+                        <Viewer
+                            fileUrl={`${process.env.PUBLIC_URL}/pdf-open-parameters.pdf`}
+                            plugins={[defaultLayoutPluginInstance, searchPluginInstance]}
+                            key={viewerKey}
+                        />
+                        <SelectionHandler phrase={phrase} onSelectionChange={onSelectionChange}/>
+                    </div>
                 </div>
                 <div style={styles.bottomPane}>
                     <PhraseForm phrase={phrase} context={context} onSavePhrase={onSavePhrase}/> 
