@@ -1,0 +1,29 @@
+
+form {
+  margin: 1rem;
+}
+
+form .element {
+  display: block;
+  margin-bottom: .5rem;
+}
+
+form .element input {
+  display: block;
+  margin-top: 0.25rem;  
+  width: 100%;
+  padding: .25rem .5rem;
+}
+
+form input[type='submit'] {
+  margin-top: .5rem;
+  padding: .25rem .5rem;
+}
+
+form .element input:focus {
+  outline: none;
+}
+
+form .element select {
+  margin-left: .5rem;
+}

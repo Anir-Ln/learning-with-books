@@ -17,14 +17,19 @@ const App = () => {
     const [context, setContext] = useState('')
     const [data, setData] = useState(['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement'])
 
+    const ref = React.useRef(null)
 
     const onSelectionChange = (selection) => {
+        if (!ref.current || !ref.current.contains(selection.anchorNode)) 
+            return
         setContext(selection.anchorNode.data)
         setPhrase(selection.toString())
         // console.log(selection);
     }
 
     const onSavePhrase = (phrase, context, meaning) => {
+        if (phrase.trim() === '') return
+        // @TODO check if already in data
         console.log("here: " + phrase);
         setData([...data, phrase])
         // setData([])
@@ -131,7 +136,7 @@ const App = () => {
     return (
         <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js">
             <div style={styles.splitScreen}>
-                <div style={styles.topPane}>
+                <div style={styles.topPane} ref={ref}>
                     <div
                         style={{
                             height: '100vh',
