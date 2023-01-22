@@ -25,6 +25,8 @@ Visit http://localhost:3000 to see it in action.
 ## Todo
 - [x] highlighting by phrase.
 - [x] add possibility of selecting text, then store it as new phrase with it's description
+- [ ] dynamicaly chose pdf file
+- [ ] consume an api
 
 
 ## Spotlights
