@@ -15,17 +15,26 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
     levelRef.current.value = "" 
     onSavePhrase(phrase, context, meaningRef.current.value)
   }
+
+  const phraseStyles = {
+    fontWeight: 500,
+    backgroundColor: 'bisque',
+    padding: 2,
+    display: 'block',
+    marginTop: 2
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <label className='element'>
-        Phrase: {phrase}
+        Phrase: <span style={phraseStyles}>{phrase}</span>
       </label>
       <label className='element'>
-        Context: {context}
+        Context: <span style={phraseStyles}>{context}</span>
       </label>
       <label className='element'>
         Meaning:
-        <input type="text" name="meaning" ref={meaningRef}/>
+        <textarea type="text" name="meaning" ref={meaningRef}/>
       </label>
       <label className='element'>
         Type:
@@ -42,7 +51,7 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
           <option value="5">5</option>
         </select>
       </label>
-      <input type="submit" value="Submit" />
+      <input type="submit" value="Submit"/>
     </form>
   )
 }

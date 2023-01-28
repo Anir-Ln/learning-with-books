@@ -8,11 +8,15 @@ form .element {
   margin-bottom: .5rem;
 }
 
-form .element input {
+form .element input, textarea {
   display: block;
   margin-top: 0.25rem;  
   width: 100%;
   padding: .25rem .5rem;
+}
+
+textarea {
+  resize: vertical;
 }
 
 form input[type='submit'] {
@@ -20,7 +24,7 @@ form input[type='submit'] {
   padding: .25rem .5rem;
 }
 
-form .element input:focus {
+form .element input:focus, textarea:focus {
   outline: none;
 }
 

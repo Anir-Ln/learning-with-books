@@ -1,21 +1,26 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Viewer, Worker, Popover, Position, Tooltip} from '@react-pdf-viewer/core';
+import { Viewer, Worker, Popover, Position, Tooltip, Button} from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { searchPlugin } from '@react-pdf-viewer/search';
+import { highlightPlugin, MessageIcon } from '@react-pdf-viewer/highlight';
+import { Trigger } from '@react-pdf-viewer/highlight';
 import SelectionHandler from './SelectionHandler';
 import PhraseForm from './PhraseForm'
 
 // Import styles
 import '@react-pdf-viewer/search/lib/styles/index.css';
 
+// Import styles
+import '@react-pdf-viewer/highlight/lib/styles/index.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 const App = () => {
+    const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
     const [phrase, setPhrase] = useState('')
     const [context, setContext] = useState('')
-    const [data, setData] = useState(['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement'])
+    const [data, setData] = useState(setupData)
 
     const ref = React.useRef(null)
 
@@ -28,12 +33,16 @@ const App = () => {
     }
 
     const onSavePhrase = (phrase, context, meaning) => {
-        if (phrase.trim() === '') return
+        if (phrase.trim() === '') {
+            console.log("phrase or context is empty");
+            return
+        }
         // @TODO check if already in data
-        console.log("here: " + phrase);
+        console.log(phrase.replace('\n', ''));
         setData([...data, phrase])
-        // setData([])
-        console.log(data);
+
+        // if (context.includes(phrase)) console.log("yes");
+        // else console.log("no");
     }
 
     const renderHighlights = React.useCallback(
@@ -96,11 +105,9 @@ const App = () => {
         }, []
     );
 
-    
-    
     const searchPluginInstance = searchPlugin({
         keyword: [
-            ...data.map(text => new RegExp(text))
+            ...data.map(text => new RegExp(text.replace(/\r?\n|\r/g, "")))
         ],
         renderHighlights,
         // onHighlightKeyword: (props) => {
@@ -116,7 +123,8 @@ const App = () => {
     const [viewerKey, setViewerKey] = useState(0)
 
     useEffect(() => {
-        setViewerKey(viewerKey + 1)
+        setViewerKey(viewerKey ? 0 : 1)
+        console.log(data);
     }, [data])
 
     const styles = {

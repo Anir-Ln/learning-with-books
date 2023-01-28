@@ -5,6 +5,7 @@
     "dependencies": {
         "@react-pdf-viewer/core": "3.6.0",
         "@react-pdf-viewer/default-layout": "3.6.0",
+        "@react-pdf-viewer/highlight": "^3.11.0",
         "pdfjs-dist": "^2.16.105",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
