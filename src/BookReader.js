@@ -19,7 +19,6 @@ const BookReader = () => {
     const {bookName, lang} = useParams();
 
     const [currentPage, setCurrentPage] = useState(0)
-    // const [lastElement, setLastElement] = useState(null)
 
     const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
     const [phrase, setPhrase] = useState('')
@@ -34,20 +33,18 @@ const BookReader = () => {
         setContext(selection.anchorNode.data)
         setPhrase(selection.toString())
         // console.log(selection);
-        // setLastElement(selection.anchorNode.parentElement)
-        // console.log("set last element");
-        // console.log(selection);
     }
 
-    const onSavePhrase = (phrase, context, meaning) => {
-        if (phrase.trim() === '') {
+    // @input {phrase, meaning, level, type, context}
+    const onSavePhrase = (input) => {
+        if (input.phrase.trim() === '') {
             console.log("phrase or context is empty");
             return
         }
-        // lastElement?.scrollIntoView()
         // @TODO check if already in data
+
         // console.log(phrase.replace(/\r?\n|\r/g, ""));
-        setData([...data, phrase])
+        setData([...data, input.phrase])
         // if (context.includes(phrase)) console.log("yes");
         // else console.log("no");
     }

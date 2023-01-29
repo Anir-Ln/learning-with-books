@@ -13,7 +13,14 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
     meaningRef.current.value = "" 
     typeRef.current.value = "" 
     levelRef.current.value = "" 
-    onSavePhrase(phrase, context, meaningRef.current.value)
+
+    onSavePhrase({
+      phrase, 
+      context, 
+      meaning: meaningRef.current.value,
+      level: levelRef.current.value, 
+      type: typeRef.current.value,
+    })
   }
 
   const phraseStyles = {
