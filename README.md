@@ -26,7 +26,7 @@ Visit http://localhost:3000 to see it in action.
 - [x] highlighting by phrase.
 - [x] add possibility of selecting text, then store it as new phrase with it's description
 - [x] multiple line highlights (every line is a span)
-- [ ] dynamicaly chose pdf file
+- [x] dynamicaly chose pdf file
 - [ ] consume an api
 
 
