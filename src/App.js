@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Viewer, Worker, Popover, Position, Tooltip, Button} from '@react-pdf-viewer/core';
+import { Viewer, Worker, Popover, Position, Tooltip} from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { searchPlugin } from '@react-pdf-viewer/search';
-import { highlightPlugin, MessageIcon } from '@react-pdf-viewer/highlight';
-import { Trigger } from '@react-pdf-viewer/highlight';
 import SelectionHandler from './SelectionHandler';
 import PhraseForm from './PhraseForm'
+
+// import { openPlugin } from '@react-pdf-viewer/open';
+
+// // Import styles
+// import '@react-pdf-viewer/open/lib/styles/index.css';
+
 
 // Import styles
 import '@react-pdf-viewer/search/lib/styles/index.css';
@@ -17,6 +21,7 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 const App = () => {
+    const [bookName, setBookName] = useState('pdf-open-parameters.pdf')
     const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
     const [phrase, setPhrase] = useState('')
     const [context, setContext] = useState('')
@@ -38,7 +43,7 @@ const App = () => {
             return
         }
         // @TODO check if already in data
-        console.log(phrase.replace('\n', ''));
+        console.log(phrase.replace(/\r?\n|\r/g, ""));
         setData([...data, phrase])
 
         // if (context.includes(phrase)) console.log("yes");
@@ -107,7 +112,7 @@ const App = () => {
 
     const searchPluginInstance = searchPlugin({
         keyword: [
-            ...data.map(text => new RegExp(text.replace(/\r?\n|\r/g, "")))
+            ...data.map(text => text.replace(/\r?\n|\r/g, ""))
         ],
         renderHighlights,
         // onHighlightKeyword: (props) => {
@@ -134,13 +139,29 @@ const App = () => {
         },
         topPane: {
             width: '60%',
+            position: 'fixed',
+            // top: 0,
+            // left: 0
         },
         bottomPane: {
             width: '40%',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            height: '100%'
         },
     }
 
 
+    const handleDocumentLoad = (e) => {
+        const file_name = e.file.name;
+        console.log(file_name);
+        e.doc.getAttachments().then(res => console.log(res))
+    }
+    const transformGetDocumentParams = (options) => {
+        console.log(options);
+        return options
+    }
     return (
         <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js">
             <div style={styles.splitScreen}>
@@ -154,15 +175,18 @@ const App = () => {
                         }}
                     >
                         <Viewer
-                            fileUrl={`${process.env.PUBLIC_URL}/pdf-open-parameters.pdf`}
+                            fileUrl={`${process.env.PUBLIC_URL}/books/${bookName}`}
                             plugins={[defaultLayoutPluginInstance, searchPluginInstance]}
                             key={viewerKey}
+                            onDocumentLoad={handleDocumentLoad}
+                            transformGetDocumentParams={transformGetDocumentParams}
                         />
                         <SelectionHandler phrase={phrase} onSelectionChange={onSelectionChange}/>
                     </div>
                 </div>
                 <div style={styles.bottomPane}>
                     <PhraseForm phrase={phrase} context={context} onSavePhrase={onSavePhrase}/> 
+                    <iframe src={`https://dictionary.cambridge.org/dictionary/english/${phrase}`} width="100%" height="100%" title='dictionary'/>
                 </div>
             </div>
         </Worker>
