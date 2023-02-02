@@ -69,38 +69,29 @@ const BookReader = () => {
                                 position: 'absolute',
                             }}
                         >
-                            <Popover
-                                closeOnClickOutside={true}
-                                closeOnEscape={true}
-                                content={() => (
-                                    <div style={{ padding: '0.5rem', width: '12rem' }}>More information go here</div>
-                                )}
+                            <Tooltip
+                                content={() => `phrase: ${area.keywordStr.trim()}`}
                                 offset={{ top: 8 + (area.height * area.pageHeight) / 100, left: 0 }}
                                 position={Position.BottomCenter}
-                                target={(toggle, _) => (
-                                    <Tooltip
-                                        content={() => `phrase: ${area.keywordStr.trim()}`}
-                                        offset={{ top: 8 + (area.height * area.pageHeight) / 100, left: 0 }}
-                                        position={Position.BottomCenter}
-                                        target={
-                                            <div
-                                                className="rpv-search__highlight"
-                                                data-index={index}
-                                                style={{
-                                                    left: 0,
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    height: '105%',
-                                                    width: '100%',
-                                                    backgroundColor: color(area.keywordStr.trim()),
-                                                    cursor: 'pointer',
-                                                }}
-                                                title={area.keywordStr.trim()}
-                                                onClick={() => toggle()}
-                                            />
-                                        }
+                                target={
+                                    <div
+                                        className="rpv-search__highlight"
+                                        data-index={index}
+                                        style={{
+                                            left: 0,
+                                            position: 'absolute',
+                                            top: 0,
+                                            height: '105%',
+                                            width: '100%',
+                                            backgroundColor: color(area.keywordStr.trim()),
+                                            cursor: 'pointer',
+                                        }}
+                                        title={area.keywordStr.trim()}
+                                        onClick={() => {
+                                            setPhrase(area.keywordStr.trim())
+                                        }}
                                     />
-                                )}
+                                }
                             />
                         </div>
                     ))}
@@ -128,6 +119,8 @@ const BookReader = () => {
         setViewerKey(viewerKey ? 0 : 1)
         console.log(data);
     }, [data])
+
+
 
     // useEffect(() => {
     //     lastElement?.scrollIntoView()
