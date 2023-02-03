@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "backend for learning-with-books",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohamed Lahyane (Anir_Ln)",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^8.0.1",
+    "express": "^4.18.2"
+  }
+}
