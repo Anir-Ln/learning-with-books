@@ -4,7 +4,7 @@ const phrasesRouter = require('./routes/phrases.routes')
 
 const PORT = 8888 || process.env.PORT
 
-
+app.use(express.json())
 
 // root endpoint
 app.get("/", (req, res, next) => {
@@ -23,4 +23,12 @@ app.use((req, res) => {
 // start server
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}...`)
+})
+
+// error handling
+app.use(function errorHandler (err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(err.statusCode || 500).send({message: err.message})
 })
