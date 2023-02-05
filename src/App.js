@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import BookReader from './BookReader'
-import Dashboard from './Dashboard'
+import BookReader from './pages/BookReader'
+import Dashboard from './pages/Dashboard'
 
 
 const App = () => {
