@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react'
 import { Viewer, Worker, Popover, Position, Tooltip, SpecialZoomLevel, ScrollMode} from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { searchPlugin } from '@react-pdf-viewer/search';
-import SelectionHandler from './SelectionHandler';
-import PhraseForm from './PhraseForm'
+import SelectionHandler from '../components/SelectionHandler';
+import PhraseForm from '../components/PhraseForm'
+
+// api
+import PhraseAPI from '../api/PhraseAPI'
 
 // Import styles
 import '@react-pdf-viewer/search/lib/styles/index.css';
@@ -20,10 +23,21 @@ const BookReader = () => {
 
     const [currentPage, setCurrentPage] = useState(0)
 
-    const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
-    const [phrase, setPhrase] = useState('')
+    // const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
+    const [text, setText] = useState('')
     const [context, setContext] = useState('')
-    const [data, setData] = useState(setupData)
+    const [data, setData] = useState([])
+
+    const memoizedPhrases = React.useMemo(() => {
+        PhraseAPI.getAll().then((phrases) => {
+            setData(phrases)
+            // return phrases;
+        }).catch(err => {
+            console.log("error getting phrases")
+            console.error(err)
+        })
+    }, [])
+
 
     const ref = React.useRef(null)
 
@@ -31,20 +45,24 @@ const BookReader = () => {
         if (!ref.current || !ref.current.contains(selection.anchorNode)) 
             return
         setContext(selection.anchorNode.data)
-        setPhrase(selection.toString())
+        setText(selection.toString())
         // console.log(selection);
     }
 
     // @input {phrase, meaning, level, type, context}
-    const onSavePhrase = (input) => {
-        if (input.phrase.trim() === '') {
-            console.log("phrase or context is empty");
+    const onSavePhrase = (phrase) => {
+        const {text: textToSave, ...others} = phrase
+        if (textToSave.trim() === '') {
+            console.log("text is empty");
             return
         }
         // @TODO check if already in data
-
+        PhraseAPI.save(phrase).then((payload) => {
+            console.log(payload);
+            setData({...data, [textToSave.replace(/\r?\n|\r/g, "")]: {id: payload?.lastInsertRowid, ...others}})
+        }).catch(err => console.error(err))
         // console.log(phrase.replace(/\r?\n|\r/g, ""));
-        setData([...data, input.phrase])
+        // setData([...data, input.phrase])
         // if (context.includes(phrase)) console.log("yes");
         // else console.log("no");
     }
@@ -56,7 +74,9 @@ const BookReader = () => {
                 return colors[text.length%3]
             }
             // renderProps.highlightAreas.forEach((area, index) => {
-            //     console.log(area.keywordStr.trim()); 
+            //     let kw = area.keywordStr.trim()
+            //     console.log(kw + ": " + data[kw]?.meaning);
+            //     // console.log(index);
             // });
             // console.log(renderProps.highlightAreas.length);
             return (
@@ -70,7 +90,7 @@ const BookReader = () => {
                             }}
                         >
                             <Tooltip
-                                content={() => `phrase: ${area.keywordStr.trim()}`}
+                                content={() => `${data[area.keywordStr.trim()]?.meaning}`}
                                 offset={{ top: 8 + (area.height * area.pageHeight) / 100, left: 0 }}
                                 position={Position.BottomCenter}
                                 target={
@@ -88,7 +108,7 @@ const BookReader = () => {
                                         }}
                                         title={area.keywordStr.trim()}
                                         onClick={() => {
-                                            setPhrase(area.keywordStr.trim())
+                                            setText(area.keywordStr.trim())
                                         }}
                                     />
                                 }
@@ -97,17 +117,19 @@ const BookReader = () => {
                     ))}
                 </>
             )
-        }, []
+        }, [data]
     );
 
     const searchPluginInstance = searchPlugin({
         keyword: [
-            ...data.map(text => text.replace(/\r?\n|\r/g, ""))
+            ...Object.keys(data)?.map(text => text.replace(/\r?\n|\r/g, ""))
         ],
         renderHighlights,
-        // onHighlightKeyword: (props) => {
-        //     props.highlightEle.style.outline = '3px solid rgb(8 233 79 / 61%)';
-        //     props.highlightEle.style.backgroundColor = colors[props.keyword.source];
+        // onHighlightKeyword: (highlightEle, keyword) => {
+        //     console.log('keyword: ', keyword);
+        //     console.log(highlightEle);
+        //     // props.highlightEle.style.outline = '3px solid rgb(8 233 79 / 61%)';
+        //     // props.highlightEle.style.backgroundColor = colors[props.keyword.source];
         // },
     });
 
@@ -121,12 +143,15 @@ const BookReader = () => {
     }, [data])
 
 
-
+    // get data
     // useEffect(() => {
-    //     lastElement?.scrollIntoView()
-    //     console.log("new last element");
-    //     console.log(lastElement);
-    // }, [])
+    //     PhraseAPI.getAll().then((phrases) => {
+    //         setData(phrases)
+    //     }).catch(err => {
+    //         console.log("error getting phrases")
+    //         console.error(err)
+    //     })
+    // })
 
     const styles = {
         splitScreen: {
@@ -170,12 +195,12 @@ const BookReader = () => {
                             defaultScale={SpecialZoomLevel.PageFit}
                             scrollMode={ScrollMode.Horizontal}
                         />
-                        <SelectionHandler phrase={phrase} onSelectionChange={onSelectionChange}/>
+                        <SelectionHandler phrase={text} onSelectionChange={onSelectionChange}/>
                     </div>
                 </div>
                 <div style={styles.bottomPane}>
-                    <PhraseForm phrase={phrase} context={context} onSavePhrase={onSavePhrase}/> 
-                    <iframe src={`https://dictionary.cambridge.org/dictionary/english/${phrase}`} width="100%" height="100%" title='dictionary'/>
+                    <PhraseForm text={text} context={context} onSavePhrase={onSavePhrase}/> 
+                    <iframe src={`https://dictionary.cambridge.org/dictionary/english/${text}`} width="100%" height="100%" title='dictionary'/>
                 </div>
             </div>
         </Worker>
