@@ -5,9 +5,21 @@ const phraseValidator = require('../middleware/phrasevalidator')
 
 // get phrases
 router.get("/", (req, res, next) => {
-  console.log("phrases get all endpoint");
+  const by = req.query?.by
+  console.log("phrases get all endpoint [by=" + by + "]");
   try {
-    res.json(phrasesService.getAll())
+    let data = phrasesService.getAll()
+    if (by === 'text') {
+      let temp = {}
+      data.forEach(item => {
+        const {text, ...others} = item
+        temp[text.replace(/\r?\n|\r/g, "")] = others
+      })
+      data = temp
+    }
+
+    res.json(data)
+
   } catch(err) {
     console.log("error while getting phrases ", err.message);
     next(err)
