@@ -1,29 +1,26 @@
-import React from 'react'
-import {useRef} from 'react'
+import React, { useEffect } from 'react'
+import {useState} from 'react'
 
 import './phrase_form_styles.css'
 
-const PhraseForm = ({text, context, onSavePhrase}) => {
-  const meaningRef = useRef("")
-  const typeRef = useRef()
-  const levelRef = useRef()
+const PhraseForm = ({phrase, context, onSavePhrase}) => {
+  const [formData, setFormData] = useState(phrase)
+
+  useEffect(() => {
+    setFormData(phrase)
+  }, [phrase])
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    onSavePhrase({
-      text, 
-      // context, 
-      "meaning": meaningRef.current.value,
-      "learning_level_id": levelRef.current.value, 
-      "phrase_type_id": typeRef.current.value,
-    })
+    onSavePhrase(formData)
 
     // reset form
     e.target.reset()
     // console.log(e.target);
-    meaningRef.current.value = "" 
+    setFormData({})
   }
+
 
   const textStyles = {
     fontWeight: 500,
@@ -36,18 +33,18 @@ const PhraseForm = ({text, context, onSavePhrase}) => {
   return (
     <form onSubmit={handleSubmit}>
       <label className='element'>
-        Text: <span style={textStyles}>{text}</span>
+        Text: <span style={textStyles}>{formData?.text}</span>
       </label>
       {/* <label className='element'>
         Context: <span style={textStyles}>{context}</span>
       </label> */}
       <label className='element'>
         Meaning:
-        <textarea type="text" name="meaning" ref={meaningRef}/>
+        <textarea type="text" name="meaning" value={formData?.meaning} onChange={e => setFormData({meaning: e.target.value, ...formData})}/>
       </label>
       <label className='element'>
         Type:
-        <select ref={typeRef}>
+        <select value={formData?.phrase_type_id} onChange={e => setFormData({phrase_type_id: e.target.value, ...formData})}>
           <option value="">Select phrase type</option>
           <option value="1">1</option>
           <option value="2">2</option>
@@ -57,7 +54,7 @@ const PhraseForm = ({text, context, onSavePhrase}) => {
         </select>      </label>
       <label className='element'>
         Level of knowledge:
-        <select ref={levelRef}>
+        <select value={formData?.learning_level_id} onChange={e => setFormData({learning_level_id:e.target.value, ...formData})}>
           <option value="">Select level of knowledge</option>
           <option value="1">1</option>
           <option value="2">2</option>

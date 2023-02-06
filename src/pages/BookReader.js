@@ -13,8 +13,8 @@ import PhraseAPI from '../api/PhraseAPI'
 import '@react-pdf-viewer/search/lib/styles/index.css';
 
 // Import styles
-import '@react-pdf-viewer/highlight/lib/styles/index.css';
-import '@react-pdf-viewer/core/lib/styles/index.css';
+// import '@react-pdf-viewer/highlight/lib/styles/index.css';
+// import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { useParams } from 'react-router-dom';
 
@@ -24,9 +24,14 @@ const BookReader = () => {
     const [currentPage, setCurrentPage] = useState(0)
 
     // const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
-    const [text, setText] = useState('')
+    const [currPhrase, setCurrPhrase] = useState({
+        text: '',
+        meaning: '',
+        learning_level_id: '',
+        phrase_type_id: ''
+    })
     const [context, setContext] = useState('')
-    const [data, setData] = useState([])
+    const [data, setData] = useState({})
 
     const memoizedPhrases = React.useMemo(() => {
         PhraseAPI.getAll().then((phrases) => {
@@ -45,8 +50,12 @@ const BookReader = () => {
         if (!ref.current || !ref.current.contains(selection.anchorNode)) 
             return
         setContext(selection.anchorNode.data)
-        setText(selection.toString())
-        // console.log(selection);
+        setCurrPhrase({
+            text: selection.toString(),
+            meaning: '',
+            learning_level_id: '',
+            phrase_type_id: ''
+        })
     }
 
     // @input {phrase, meaning, level, type, context}
@@ -108,7 +117,9 @@ const BookReader = () => {
                                         }}
                                         title={area.keywordStr.trim()}
                                         onClick={() => {
-                                            setText(area.keywordStr.trim())
+                                            const nextPhrase = {text: area.keywordStr.trim(), ...data[area.keywordStr.trim()]}
+                                            console.log(nextPhrase);
+                                            setCurrPhrase(nextPhrase)
                                         }}
                                     />
                                 }
@@ -195,12 +206,12 @@ const BookReader = () => {
                             defaultScale={SpecialZoomLevel.PageFit}
                             scrollMode={ScrollMode.Horizontal}
                         />
-                        <SelectionHandler phrase={text} onSelectionChange={onSelectionChange}/>
+                        <SelectionHandler phrase={currPhrase?.text} onSelectionChange={onSelectionChange}/>
                     </div>
                 </div>
                 <div style={styles.bottomPane}>
-                    <PhraseForm text={text} context={context} onSavePhrase={onSavePhrase}/> 
-                    <iframe src={`https://dictionary.cambridge.org/dictionary/english/${text}`} width="100%" height="100%" title='dictionary'/>
+                    <PhraseForm phrase={currPhrase} context={context} onSavePhrase={onSavePhrase}/> 
+                    <iframe src={`https://dictionary.cambridge.org/dictionary/english/${currPhrase?.text}`} width="100%" height="100%" title='dictionary'/>
                 </div>
             </div>
         </Worker>
