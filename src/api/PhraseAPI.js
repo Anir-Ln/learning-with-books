@@ -10,6 +10,10 @@ const PhraseAPI = {
   save : async (payload) => {
     const { data } = await api.post("/phrases", payload)
     return data
+  },
+  update : async (payload) => {
+    const { data } = await api.put("/phrases", payload)
+    return data
   }
 }
 
