@@ -13,12 +13,11 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    onSavePhrase(formData)
-
-    // reset form
-    e.target.reset()
-    // console.log(e.target);
-    setFormData({})
+    onSavePhrase(formData) && setFormData({})
+    // // reset form
+    // e.target.reset()
+    // // console.log(e.target);
+    // setFormData({})
   }
 
 
@@ -40,11 +39,11 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
       </label> */}
       <label className='element'>
         Meaning:
-        <textarea type="text" name="meaning" value={formData?.meaning} onChange={e => setFormData({meaning: e.target.value, ...formData})}/>
+        <textarea type="text" name="meaning" value={formData.meaning ?? ''} onChange={e => setFormData({...formData, meaning: e.target.value})}/>
       </label>
       <label className='element'>
         Type:
-        <select value={formData?.phrase_type_id} onChange={e => setFormData({phrase_type_id: e.target.value, ...formData})}>
+        <select value={formData.phrase_type_id ?? ''} onChange={e => setFormData({...formData, phrase_type_id: e.target.value})}>
           <option value="">Select phrase type</option>
           <option value="1">1</option>
           <option value="2">2</option>
@@ -54,7 +53,7 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
         </select>      </label>
       <label className='element'>
         Level of knowledge:
-        <select value={formData?.learning_level_id} onChange={e => setFormData({learning_level_id:e.target.value, ...formData})}>
+        <select value={formData.learning_level_id ?? ''} onChange={e => setFormData({...formData, learning_level_id:e.target.value})}>
           <option value="">Select level of knowledge</option>
           <option value="1">1</option>
           <option value="2">2</option>
