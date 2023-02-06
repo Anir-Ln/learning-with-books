@@ -4,20 +4,25 @@ In this code I am testing the react-pdf-highlighter library.
 
 * Install the dependencies
 
+- for frontend
 ```console
 $ npm install
 ```
-
-* Build
-
+- for backend
 ```console
-$ npm run build
+$ cd server & npm install
 ```
 
 * Run locally
 
+
+- for backend
 ```console
-$ npm run start
+$ cd server & node server.js
+```
+- for frontend
+```console
+$ npm start
 ```
 
 Visit http://localhost:3000 to see it in action.
@@ -28,8 +33,10 @@ Visit http://localhost:3000 to see it in action.
 - [x] multiple line highlights (every line is a span)
 - [x] dynamicaly chose pdf file
 - [x] design db
-- [ ] create backend (express.js)
-- [ ] consume an api
+- [ ] create & consume api
+    - [x] create phrase
+    - [x] update phrase
+    - [ ] delete phrase
 
 
 ## Spotlights
