@@ -4,24 +4,15 @@ In this code I am testing the react-pdf-highlighter library.
 
 * Install the dependencies
 
-- for frontend
 ```console
 $ npm install
-```
-- for backend
-```console
 $ cd server & npm install
 ```
 
 * Run locally
 
-
-- for backend
 ```console
 $ cd server & node server.js
-```
-- for frontend
-```console
 $ npm start
 ```
 
