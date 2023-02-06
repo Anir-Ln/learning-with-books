@@ -36,4 +36,15 @@ router.post("/", phraseValidator.validateCreate, (req, res, next) => {
   }
 })
 
+
+router.put("/", phraseValidator.validateUpdate, (req, res, next) => {
+  console.log("phrases put endpoint");
+  try {
+    res.json(phrasesService.update(req.body))
+  } catch(err) {
+    console.log("error while put request for a phrase ", err.message);
+    next(err)
+  }
+})
+
 module.exports = router

@@ -12,7 +12,16 @@ const save = (phrase) => {
 }
 
 
+const update = (phrase) => {
+  return db.run(
+    `UPDATE phrases set meaning = :meaning, phrase_type_id = :phrase_type_id, learning_level_id = :learning_level_id where id = :id`,
+    phrase 
+  )
+}
+
+
 module.exports = {
   getAll,
   save,
+  update,
 }
