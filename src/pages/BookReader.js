@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Viewer, Worker, Popover, Position, Tooltip, SpecialZoomLevel, ScrollMode} from '@react-pdf-viewer/core';
+import { Viewer, Worker, Position, Tooltip, SpecialZoomLevel, ScrollMode} from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { searchPlugin } from '@react-pdf-viewer/search';
 import SelectionHandler from '../components/SelectionHandler';
 import PhraseForm from '../components/PhraseForm'
+
 
 // api
 import PhraseAPI from '../api/PhraseAPI'
@@ -63,13 +64,26 @@ const BookReader = () => {
         const {text: textToSave, ...others} = phrase
         if (textToSave.trim() === '') {
             console.log("text is empty");
-            return
+            return false
         }
-        // @TODO check if already in data
-        PhraseAPI.save(phrase).then((payload) => {
-            console.log(payload);
-            setData({...data, [textToSave.replace(/\r?\n|\r/g, "")]: {id: payload?.lastInsertRowid, ...others}})
-        }).catch(err => console.error(err))
+
+        // save
+        if (!phrase.id || phrase.id === '') {
+            PhraseAPI.save(phrase).then((payload) => {
+                setData({...data, [textToSave.replace(/\r?\n|\r/g, "")]: {id: payload?.lastInsertRowid, ...others}})
+            }).catch(err => console.error(err))
+            return true
+        } 
+        // update 
+
+        if (JSON.stringify(data[textToSave]) !== JSON.stringify(others)) {
+            PhraseAPI.update(phrase).then((payload) => {
+                setData({...data, [textToSave]: phrase})
+            }).catch(err => console.error(err))
+            return true
+        }
+
+        return false
         // console.log(phrase.replace(/\r?\n|\r/g, ""));
         // setData([...data, input.phrase])
         // if (context.includes(phrase)) console.log("yes");
