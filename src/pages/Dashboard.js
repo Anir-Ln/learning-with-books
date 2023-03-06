@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+// the dashboar lists all the books by setting the languages
+// this books will be requested using the api by sending the language.
+
 const Dashboard = () => {
   const [lang, setLang] = useState('english')
 
   let langs = ['english', 'french', 'german']
+  // hardcoding the booknames, use the apis later
   let booksNames = [
     'Freud_ A Very Short Introduction (Very Short Introductions)',
     'Democracy_ A Very Short Introduction (Very Short Introductions)',

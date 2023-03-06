@@ -26,7 +26,7 @@ const SelectionHandler = ({phrase, onSelectionChange}) => {
       }
       document.removeEventListener("mouseup", selectPhrase);
     };
-  }, [setCssProperties, phrase, onSelectionChange]);
+  }, [phrase]);
 
   return (
     <></>

@@ -10,31 +10,31 @@ import PhraseForm from '../components/PhraseForm'
 // api
 import PhraseAPI from '../api/PhraseAPI'
 
-// Import styles
 import '@react-pdf-viewer/search/lib/styles/index.css';
-
-// Import styles
-// import '@react-pdf-viewer/highlight/lib/styles/index.css';
-// import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { useParams } from 'react-router-dom';
 
 const BookReader = () => {
-    const {bookName, lang} = useParams();
+    // get the params from the url -> will be used to loaed the pdf.
+    const {bookName, lang} = useParams()
 
     const [currentPage, setCurrentPage] = useState(0)
 
-    // const setupData = ['Liberation', 'National Security', 'throughout', 'Cybersecurity was by then already a hot topic', 'conference', 'This project', 'should', 'States', 'Group', 'Opening', 'pdf', 'example', 'File', 'includes', 'content', 'could', 'new work', 'Parameters', 'agreement']
+    // currPhrase is the current selected text -> will be displayed on form section
     const [currPhrase, setCurrPhrase] = useState({
         text: '',
         meaning: '',
         learning_level_id: '',
         phrase_type_id: ''
     })
-    const [context, setContext] = useState('')
-    const [data, setData] = useState({})
 
-    const memoizedPhrases = React.useMemo(() => {
+    const [context, setContext] = useState('')
+
+    // data is a big object where the keys are the phrases and the content is meaning, learning_level_id...
+    const [data, setData] = useState({})
+    // we get the data (phrases) using the PhraseApi, we use useMemo so that we don't request the data on every render, which
+    // means we re-request the data only after the depenedencies change, in our case deps = [], no deps (only when reloading)
+    React.useMemo(() => {
         PhraseAPI.getAll().then((phrases) => {
             setData(phrases)
             // return phrases;
@@ -44,9 +44,9 @@ const BookReader = () => {
         })
     }, [])
 
-
+    // ref references the div that contains the pdf viewer, we will use it to know if the selection is done in the viewer, and not outside
     const ref = React.useRef(null)
-
+    // when selecting some text, we update currPhrase
     const onSelectionChange = (selection) => {
         if (!ref.current || !ref.current.contains(selection.anchorNode)) 
             return
@@ -59,7 +59,8 @@ const BookReader = () => {
         })
     }
 
-    // @input {phrase, meaning, level, type, context}
+    // when clicking save in phrase form.
+    // @input {textToSave, meaning, level, type, context}
     const onSavePhrase = (phrase) => {
         const {text: textToSave, ...others} = phrase
         if (textToSave.trim() === '') {
@@ -67,7 +68,7 @@ const BookReader = () => {
             return false
         }
 
-        // save
+        // save if not already phrase has an id, otherwise already saved, only update
         if (!phrase.id || phrase.id === '') {
             PhraseAPI.save(phrase).then((payload) => {
                 setData({...data, [textToSave.replace(/\r?\n|\r/g, "")]: {id: payload?.lastInsertRowid, ...others}})
@@ -75,7 +76,6 @@ const BookReader = () => {
             return true
         } 
         // update 
-
         if (JSON.stringify(data[textToSave]) !== JSON.stringify(others)) {
             PhraseAPI.update(phrase).then((payload) => {
                 setData({...data, [textToSave]: phrase})
@@ -90,18 +90,13 @@ const BookReader = () => {
         // else console.log("no");
     }
 
+    // this function is needed to describe how to render the highlights (how to highlight the saved phrases)
     const renderHighlights = React.useCallback(
         (renderProps) => {
             const colors = ['rgb(8 233 79 / 50%)', 'rgb(233 70 20 / 50%)', 'rgb(70 20 233 / 50%)']
             const color = (text) => {
                 return colors[text.length%3]
             }
-            // renderProps.highlightAreas.forEach((area, index) => {
-            //     let kw = area.keywordStr.trim()
-            //     console.log(kw + ": " + data[kw]?.meaning);
-            //     // console.log(index);
-            // });
-            // console.log(renderProps.highlightAreas.length);
             return (
                 <>
                     {renderProps.highlightAreas.map((area, index) => (
@@ -130,6 +125,7 @@ const BookReader = () => {
                                             cursor: 'pointer',
                                         }}
                                         title={area.keywordStr.trim()}
+                                        // when clicking the highlight, we show it in the phrase form if want to update it.
                                         onClick={() => {
                                             const nextPhrase = {text: area.keywordStr.trim(), ...data[area.keywordStr.trim()]}
                                             console.log(nextPhrase);
@@ -150,33 +146,17 @@ const BookReader = () => {
             ...Object.keys(data)?.map(text => text.replace(/\r?\n|\r/g, ""))
         ],
         renderHighlights,
-        // onHighlightKeyword: (highlightEle, keyword) => {
-        //     console.log('keyword: ', keyword);
-        //     console.log(highlightEle);
-        //     // props.highlightEle.style.outline = '3px solid rgb(8 233 79 / 61%)';
-        //     // props.highlightEle.style.backgroundColor = colors[props.keyword.source];
-        // },
     });
 
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
     const [viewerKey, setViewerKey] = useState(0)
 
+    // this is required to make sure the pdf-viewer re-renders after the data changes, so that all the phrases will be highlighted.
     useEffect(() => {
         setViewerKey(viewerKey ? 0 : 1)
         console.log(data);
     }, [data])
-
-
-    // get data
-    // useEffect(() => {
-    //     PhraseAPI.getAll().then((phrases) => {
-    //         setData(phrases)
-    //     }).catch(err => {
-    //         console.log("error getting phrases")
-    //         console.error(err)
-    //     })
-    // })
 
     const styles = {
         splitScreen: {
@@ -218,8 +198,10 @@ const BookReader = () => {
                             initialPage={currentPage}
                             onPageChange={(e) => setCurrentPage(e.currentPage)}
                             defaultScale={SpecialZoomLevel.PageFit}
+                            // we can set scrollMode to vertical to read the book in the normal way
                             scrollMode={ScrollMode.Horizontal}
                         />
+                        {/* the selectionHandler will detect selection of text */}
                         <SelectionHandler phrase={currPhrase?.text} onSelectionChange={onSelectionChange}/>
                     </div>
                 </div>

@@ -4,6 +4,8 @@ const phrasesService = require('../services/phrases.service')
 const phraseValidator = require('../middleware/phrasevalidator')
 
 // get phrases
+// when specifying the "by" path variable, we want to get a single big object instead of an array of objects. 
+// the keys of this returned object are the values of "by"
 router.get("/", (req, res, next) => {
   const by = req.query?.by
   console.log("phrases get all endpoint [by=" + by + "]");

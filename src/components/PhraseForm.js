@@ -12,14 +12,8 @@ const PhraseForm = ({phrase, context, onSavePhrase}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
     onSavePhrase(formData) && setFormData({})
-    // // reset form
-    // e.target.reset()
-    // // console.log(e.target);
-    // setFormData({})
   }
-
 
   const textStyles = {
     fontWeight: 500,
